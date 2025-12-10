@@ -1,36 +1,98 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# One Dash E-commerce Website
+
+Authentic Jamaican Marinade & Seasoning Co. - E-commerce website built with Next.js.
+
+## Features
+
+- 🏠 **Home Page** - Hero section with video, product showcase, and about section
+- 🛍️ **Product Pages** - Individual pages for all 7 products with details and add-to-cart
+- 🛒 **Shopping Cart** - Full cart UI with quantity controls (Stripe integration coming soon)
+- 🎥 **Video Gallery** - All 10 videos in a responsive grid layout
+- 📄 **Legal Pages** - Terms of Service and Privacy Policy
+- 🇯🇲 **Jamaican Theme** - Authentic branding with red, yellow, and green colors
+
+## Products
+
+1. Hot & Spicy Marinade
+2. Jerk Seasoning
+3. Brown Stew Marinade
+4. All-Purpose Seasoning
+5. Curry Seasoning
+6. Dipping Sauce
+7. Hot Sauce
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
+- Node.js 18+ 
+- npm or yarn
+
+### Installation
+
+1. Install dependencies:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. Run the development server:
+```bash
+npm run dev
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. Open [http://localhost:3000](http://localhost:3000) in your browser
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Build for Production
 
-## Learn More
+```bash
+npm run build
+npm start
+```
 
-To learn more about Next.js, take a look at the following resources:
+## Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```
+/
+├── app/                    # Next.js app directory
+│   ├── page.tsx           # Home page
+│   ├── layout.tsx         # Root layout
+│   ├── products/          # Product pages
+│   ├── cart/              # Shopping cart
+│   ├── gallery/           # Video gallery
+│   ├── terms/             # Terms of Service
+│   └── privacy/           # Privacy Policy
+├── components/            # React components
+│   ├── Header.tsx
+│   ├── Footer.tsx
+│   ├── ProductCard.tsx
+│   ├── VideoPlayer.tsx
+│   └── CartContext.tsx
+├── lib/                   # Utilities
+│   └── products.ts       # Product data
+└── public/                # Static assets
+    ├── images/           # Product images
+    └── videos/           # Video files
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Next Steps
 
-## Deploy on Vercel
+- [ ] Integrate Stripe for payment processing
+- [ ] Add user authentication
+- [ ] Implement order management
+- [ ] Add product reviews
+- [ ] Set up email notifications
+- [ ] Add analytics tracking
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Technologies Used
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Next.js 16** - React framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **React Context** - State management
+
+## Contact
+
+One Dash Enterprises
+Main Street, Bog Walk
+St. Catherine, Jamaica
+Tel: (876) 254-4622
