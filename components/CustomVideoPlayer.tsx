@@ -28,6 +28,14 @@ export default function CustomVideoPlayer({
     const video = videoRef.current;
     if (!video) return;
 
+    // Set mobile autoplay attributes
+    video.muted = muted;
+    video.volume = muted ? 0 : volume;
+    video.playsInline = true;
+    video.setAttribute('playsinline', 'true');
+    video.setAttribute('webkit-playsinline', 'true');
+    video.setAttribute('x5-playsinline', 'true');
+
     // Load thumbnail (first frame) only once
     const handleLoadedMetadata = () => {
       if (!thumbnailLoaded) {
@@ -41,20 +49,54 @@ export default function CustomVideoPlayer({
 
     video.addEventListener('loadedmetadata', handleLoadedMetadata);
 
-    // If autoplay is enabled, start playing
+    // Enhanced autoplay for mobile
+    const playVideo = async () => {
+      if (!autoplay || !isPlaying) return;
+      
+      try {
+        // Ensure muted before playing (required for mobile autoplay)
+        video.muted = true;
+        const playPromise = video.play();
+        
+        if (playPromise !== undefined) {
+          await playPromise;
+        }
+      } catch (error) {
+        // Autoplay might fail on mobile, try on interaction
+        const handleInteraction = () => {
+          video.muted = true;
+          video.play().catch(() => {});
+          document.removeEventListener('click', handleInteraction);
+          document.removeEventListener('touchstart', handleInteraction);
+          document.removeEventListener('scroll', handleInteraction);
+        };
+        document.addEventListener('click', handleInteraction, { once: true });
+        document.addEventListener('touchstart', handleInteraction, { once: true });
+        document.addEventListener('scroll', handleInteraction, { once: true });
+      }
+    };
+
+    // Try multiple events for better mobile compatibility
     if (autoplay && isPlaying) {
-      const playPromise = video.play();
-      if (playPromise !== undefined) {
-        playPromise.catch(() => {
-          // Autoplay might fail, that's okay
-        });
+      const events = ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough'];
+      events.forEach(event => {
+        video.addEventListener(event, playVideo, { once: true });
+      });
+
+      // Also try immediately if video is already loaded
+      if (video.readyState >= 2) {
+        playVideo();
       }
     }
 
     return () => {
       video.removeEventListener('loadedmetadata', handleLoadedMetadata);
+      const events = ['loadedmetadata', 'loadeddata', 'canplay', 'canplaythrough'];
+      events.forEach(event => {
+        video.removeEventListener(event, playVideo);
+      });
     };
-  }, [autoplay, thumbnailLoaded]);
+  }, [autoplay, muted, isPlaying, thumbnailLoaded, volume]);
 
   const togglePlayPause = () => {
     const video = videoRef.current;
@@ -119,6 +161,9 @@ export default function CustomVideoPlayer({
           muted={isMuted}
           autoPlay={autoplay}
           controls={false}
+          preload="auto"
+          webkit-playsinline="true"
+          x5-playsinline="true"
           onPlay={() => setIsPlaying(true)}
           onPause={() => setIsPlaying(false)}
         />
