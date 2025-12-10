@@ -18,11 +18,13 @@ export default function CustomVideoPlayer({
   muted = true 
 }: CustomVideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [isPlaying, setIsPlaying] = useState(autoplay);
   const [isMuted, setIsMuted] = useState(muted);
   const [volume, setVolume] = useState(1);
   const [showVolumeSlider, setShowVolumeSlider] = useState(false);
   const [thumbnailLoaded, setThumbnailLoaded] = useState(false);
+  const [showControls, setShowControls] = useState(false);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -149,9 +151,32 @@ export default function CustomVideoPlayer({
     }
   };
 
+  // Handle tap/touch to show controls on mobile
+  const handleVideoTap = (e: React.TouchEvent | React.MouseEvent) => {
+    // Don't toggle if clicking on a control button
+    const target = e.target as HTMLElement;
+    if (target.closest('button') || target.closest('input')) {
+      return;
+    }
+    
+    setShowControls(!showControls);
+    
+    // Auto-hide controls after 3 seconds on mobile
+    if (!showControls) {
+      setTimeout(() => {
+        setShowControls(false);
+      }, 3000);
+    }
+  };
+
   return (
     <div className={`relative group ${className}`}>
-      <div className="relative bg-black rounded-lg overflow-hidden">
+      <div 
+        ref={containerRef}
+        className="relative bg-black rounded-lg overflow-hidden"
+        onTouchStart={handleVideoTap}
+        onClick={handleVideoTap}
+      >
         <video
           ref={videoRef}
           src={src}
@@ -169,7 +194,9 @@ export default function CustomVideoPlayer({
         />
 
         {/* Custom Controls Overlay - Bottom Right */}
-        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+        <div className={`absolute inset-0 transition-opacity pointer-events-none ${
+          showControls ? 'opacity-100' : 'opacity-0 group-hover:opacity-100'
+        }`}>
           <div className="absolute bottom-3 right-3 flex items-center space-x-2 pointer-events-auto">
             {/* Play/Pause Button */}
             <button
